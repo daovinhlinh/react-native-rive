@@ -1,3 +1,30 @@
 {
-  "extends": "@react-native/typescript-config/tsconfig.json"
+  "extends": "@react-native/typescript-config/tsconfig.json",
+  "compilerOptions": {
+    "moduleResolution": "Node"
+  },
+  "baseUrl": "./src",
+  "paths": {
+    "@fonts": [
+      "./shared/theme/fonts"
+    ],
+    "@responsive": [
+      "./shared/theme/responsive"
+    ],
+    "@theme/*": [
+      "./shared/theme/*"
+    ],
+    "@services/*": [
+      "./services/*"
+    ],
+    "@screens/*": [
+      "./screens/*"
+    ],
+    "@assets": [
+      "../assets/"
+    ],
+    "@local-storage": [
+      "./services/local-storage"
+    ]
+  }
 }

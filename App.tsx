@@ -1,19 +1,16 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
+import {StyleSheet} from 'react-native';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import Navigation from './src/navigation';
 import Onboarding from './src/screens/Onboarding';
 
 const App = () => {
-
   return (
-    <SafeAreaProvider>
-      <Onboarding />
+    <SafeAreaProvider style={{flex: 1}}>
+      <Navigation />
+      {/* <Onboarding /> */}
     </SafeAreaProvider>
   );
 };
 
 export default App;
-
-const styles = StyleSheet.create({
-
-});

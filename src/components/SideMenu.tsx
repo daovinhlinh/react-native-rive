@@ -64,15 +64,14 @@ const SideMenuItem = ({
       ]}
       onPress={() => {
         onChangeTab();
-        console.log(123);
       }}>
       <View pointerEvents="none">
-        {/* <Rive
+        <Rive
           artboardName={artboardName}
           stateMachineName={stateMachineName}
           resourceName="icons"
           style={styles.icon}
-        /> */}
+        />
       </View>
       <Text style={[styles.title, isActive && {color: '#000'}]}>{title}</Text>
     </TouchableOpacity>
@@ -128,8 +127,8 @@ const styles = StyleSheet.create({
   container: {
     width: horizontal(288),
     flex: 1,
-    backgroundColor: '#17203A',
-    borderRadius: 30,
+    // backgroundColor: '#17203A',
+    // borderRadius: 30,
     paddingHorizontal: horizontal(8),
   },
   info: {

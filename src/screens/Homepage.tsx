@@ -4,6 +4,7 @@ import {
   FlatList,
   Image,
   ImageSourcePropType,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -13,6 +14,7 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Rive, {Alignment, Fit, RiveRef} from 'rive-react-native';
 import {code_course, ios_course} from '../../assets/Logos/images';
+import SideMenu from '../components/SideMenu';
 import {getFont, TextStyle} from '../shared/theme/font';
 import {height, horizontal, vertical} from '../shared/theme/responsive';
 import {colorWithOpacity} from '../utils/color';
@@ -100,32 +102,8 @@ const Homepage = () => {
   const animation = useRef(new Animated.Value(0)).current;
   const scaleValue = useRef(new Animated.Value(0)).current;
   const translateValue = useRef(new Animated.ValueXY({x: 0, y: 0})).current;
-  // const [rotateY, setRotateY] = useState(
-  //   animation.interpolate({
-  //     inputRange: [0, 1],
-  //     outputRange: ['0deg', '-45deg'],
-  //   }),
-  // );
-  // const [scale, setScale] = useState(
-  //   animation.interpolate({
-  //     inputRange: [0, 1],
-  //     outputRange: [1, 0.8],
-  //   }),
-  // );
-
-  // const [translateX, setTranslateX] = useState(
-  //   animation.interpolate({
-  //     inputRange: [0, 1],
-  //     outputRange: [0, horizontal(230)],
-  //   }),
-  // );
-
-  // const [translateY, setTranslateY] = useState(
-  //   animation.interpolate({
-  //     inputRange: [0, 1],
-  //     outputRange: [0, vertical(-110)],
-  //   }),
-  // );
+  const floatButtonValue = useRef(new Animated.Value(0)).current;
+  const sideMenuValue = useRef(new Animated.Value(-288)).current;
 
   const rotateY = useRef(
     animation.interpolate({
@@ -144,7 +122,7 @@ const Homepage = () => {
   const translateX = useRef(
     animation.interpolate({
       inputRange: [0, 1],
-      outputRange: [0, horizontal(200)],
+      outputRange: [0, horizontal(230)],
     }),
   ).current;
 
@@ -152,6 +130,20 @@ const Homepage = () => {
     animation.interpolate({
       inputRange: [0, 1],
       outputRange: [0, vertical(-110)],
+    }),
+  ).current;
+
+  const floatButtonTranslateX = useRef(
+    floatButtonValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [10, horizontal(200)],
+    }),
+  ).current;
+
+  const sideMenuTranslateX = useRef(
+    sideMenuValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [horizontal(-288), 0],
     }),
   ).current;
 
@@ -175,6 +167,16 @@ const Homepage = () => {
         useNativeDriver: true,
       }),
       Animated.timing(translateValue.y, {
+        toValue: open ? 1 : 0,
+        duration: 500,
+        useNativeDriver: true,
+      }),
+      Animated.timing(floatButtonValue, {
+        toValue: open ? 1 : 0,
+        duration: 520,
+        useNativeDriver: true,
+      }),
+      Animated.timing(sideMenuValue, {
         toValue: open ? 1 : 0,
         duration: 500,
         useNativeDriver: true,
@@ -237,87 +239,120 @@ const Homepage = () => {
   });
 
   return (
-    <ScrollView
-      nestedScrollEnabled
-      style={{
-        backgroundColor: 'red',
-      }}>
-      <View
-        style={{
-          maxHeight: open ? height : height * 0.9,
-          borderRadius: open ? 0 : 30,
-          overflow: 'hidden',
-        }}>
-        <TouchableOpacity onPress={onPressButton} style={styles.floatButton}>
-          <View pointerEvents="none">
-            <Rive
-              artboardName="menu"
-              resourceName="menu_button"
-              stateMachineName="State Machine"
-              animationName="close"
-              ref={buttonRef}
-              fit={Fit.Cover}
-              alignment={Alignment.Center}
-              style={styles.icon}
-            />
+    <SafeAreaView>
+      <LinearGradient colors={['#17203A', colorWithOpacity('#17203A', 0.8)]}>
+        <ScrollView nestedScrollEnabled style={styles.scrollView}>
+          <TouchableOpacity
+            onPress={onPressButton}
+            style={[
+              styles.floatButton,
+              {
+                transform: [{translateX: floatButtonTranslateX}],
+              },
+            ]}>
+            <View pointerEvents="none">
+              <Rive
+                artboardName="menu"
+                resourceName="menu_button"
+                stateMachineName="State Machine"
+                animationName="close"
+                ref={buttonRef}
+                fit={Fit.Cover}
+                alignment={Alignment.Center}
+                style={styles.icon}
+              />
+            </View>
+          </TouchableOpacity>
+          <Animated.View
+            style={[
+              styles.sideMenu,
+              {
+                transform: [{translateX: sideMenuTranslateX}],
+              },
+            ]}>
+            <SideMenu />
+          </Animated.View>
+          <View
+            style={{
+              ...(!open && {maxHeight: height * 0.9}),
+              borderTopLeftRadius: open ? 0 : 30,
+              borderBottomLeftRadius: open ? 0 : 30,
+              overflow: 'hidden',
+            }}>
+            <Animated.View
+              style={[
+                styles.content,
+                {
+                  transform: [
+                    {
+                      translateX,
+                    },
+                    {
+                      translateY,
+                    },
+                    {
+                      rotateY,
+                    },
+                    {
+                      scale,
+                    },
+                  ],
+                },
+              ]}>
+              <Text style={styles.courseListHeader}>Courses</Text>
+              <FlatList
+                data={courses}
+                renderItem={renderCourse}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                getItemLayout={getItemLayout}
+              />
+              <Text style={styles.recentListHeader}>Recents</Text>
+              <FlatList
+                data={courseSections}
+                renderItem={renderCourseSection}
+                showsVerticalScrollIndicator={false}
+                style={styles.courseSectionList}
+                scrollEnabled={false}
+                ItemSeparatorComponent={renderSeparator}
+              />
+            </Animated.View>
           </View>
-        </TouchableOpacity>
-        <Animated.View
-          style={[
-            styles.content,
-            {
-              transform: [
-                {
-                  translateX,
-                },
-                {
-                  translateY,
-                },
-                {rotateY},
-                {
-                  scale,
-                },
-              ],
-            },
-          ]}>
-          <Text style={styles.courseListHeader}>Courses</Text>
-          <FlatList
-            data={courses}
-            renderItem={renderCourse}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            getItemLayout={getItemLayout}
-          />
-          <Text style={styles.recentListHeader}>Recents</Text>
-          <FlatList
-            data={courseSections}
-            renderItem={renderCourseSection}
-            showsVerticalScrollIndicator={false}
-            style={styles.courseSectionList}
-            scrollEnabled={false}
-            ItemSeparatorComponent={renderSeparator}
-          />
-        </Animated.View>
-      </View>
-    </ScrollView>
+        </ScrollView>
+      </LinearGradient>
+    </SafeAreaView>
   );
 };
 
 export default Homepage;
 
 const styles = StyleSheet.create({
+  scrollView: {
+    // backgroundColor: 'red',
+    width: '100%',
+  },
   content: {
     backgroundColor: '#EEF1F8',
     // flex: 1,
-    // paddingBottom: vertical(40),
+    paddingBottom: vertical(70),
     paddingTop: vertical(60),
+    transformOrigin: ['30%', '10%', 20],
+    overflow: 'hidden',
+    width: '100%',
   },
   floatButton: {
     justifyContent: 'space-between',
     position: 'absolute',
     top: 10,
     left: 10,
-    zIndex: 1,
+    zIndex: 3,
+  },
+  sideMenu: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    zIndex: 2,
+    height: '100%',
   },
   icon: {
     width: vertical(54),

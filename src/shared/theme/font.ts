@@ -9,6 +9,7 @@ const FontSize = (textStyle: string) => {
     case 'title2':
       return 24;
     case 'title3':
+    case 'title6':
       return 20;
     case 'body':
     case 'headline':
@@ -32,6 +33,7 @@ const FontFamily = (textStyle: string) => {
     case 'title':
     case 'title2':
     case 'title3':
+    case 'title6':
       return 'Poppins-Bold';
 
     case 'body':
@@ -47,10 +49,39 @@ const FontFamily = (textStyle: string) => {
   }
 };
 
+const LineHeight = (textStyle: string) => {
+  switch (textStyle) {
+    case 'largeTitle':
+      return 40;
+    case 'title':
+      return 36;
+    case 'title2':
+      return 32;
+    case 'title3':
+    case 'title6':
+      return 28;
+    case 'body':
+    case 'headline':
+      return 22;
+    case 'subheadline':
+    case 'subheadline2':
+      return 20;
+    case 'footnote':
+    case 'footnote2':
+      return 18;
+    case 'caption':
+      return 16;
+    default:
+      return 22;
+  }
+};
+
 export const getFont = (textStyle: string) => {
   return {
     fontSize: fontSize(FontSize(textStyle)),
     fontFamily: FontFamily(textStyle),
+    lineHeight: LineHeight(textStyle),
+    color: '#000',
   };
 };
 
@@ -59,6 +90,7 @@ export enum TextStyle {
   largeTitle = 'largeTitle',
   title2 = 'title2',
   title3 = 'title3',
+  title6 = 'title6',
   body = 'body',
   subheadline = 'subheadline',
   caption = 'caption',

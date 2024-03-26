@@ -1,6 +1,5 @@
 import React, {useRef, useState} from 'react';
 import {
-  Button,
   ImageBackground,
   StyleSheet,
   Text,
@@ -12,7 +11,6 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {SvgXml} from 'react-native-svg';
 import Rive, {Alignment, Fit, RiveRef} from 'rive-react-native';
 import {icons} from '../../assets/Icons/icons';
-import Tabbar from '../components/Tabbar';
 import {getFont, TextStyle} from '../shared/theme/font';
 import {fontSize, horizontal, vertical} from '../shared/theme/responsive';
 import SignInModal from './SignInModal';
